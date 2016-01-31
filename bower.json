@@ -1,0 +1,36 @@
+{
+  "name": "bbtools-es5",
+  "description": "The Building Blocks and Tools Library - EcmaScript 5",
+  "main": "src/BBT.js",
+  "authors": [
+    "Fernando Quinonez <fernando.andres.quinonez.granados@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "bigdata",
+    "data",
+    "sciences",
+    "hep",
+    "physics",
+    "mathematics",
+    "statistics",
+    "biology",
+    "chemistry",
+    "visualization",
+    "visualisation",
+    "generation",
+    "analysis"
+  ],
+  "homepage": "https://github.com/quinonez/bbtools-es5",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "three.js": "threejs#*"
+  }
+}
