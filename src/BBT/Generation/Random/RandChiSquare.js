@@ -23,19 +23,33 @@
   			4/14/05
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
 
   function RandChiSquare( args ){
     this.fa = args.a || 1.0;
     this.fengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+      return RandChiSquare.GenChiSquare( this.fengine, this.fa );
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );  
+      }
+    };
   } 
+
+
 
   RandChiSquare.Shoot = function( args ){
     var sa = args.a || 1.0;
     var sengine = args.engine || new JamesRandom({});
     return RandChiSquare.GenChiSquare( sengine, sa );
   };
+
+
 
   RandChiSquare.ShootArray = function( args ){
     var ssize = args.size || 1;
@@ -47,6 +61,8 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
       args.vect.push( RandChiSquare.Shoot( argsShoot ) );
     }
   };
+
+
 
   RandChiSquare.GenChiSquare = function( sengine, sa ){
     /******************************************************************
@@ -135,20 +151,5 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   };
 
 
-  RandChiSquare.prototype = {
-    constructor: RandChiSquare,
 
-    Fire: function(){
-      return RandChiSquare.GenChiSquare( this.fengine, this.fa );
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );  
-      }
-    }
-  }
-
-  return RandChiSquare;
-});
-
+  module.exports = RandChiSquare;

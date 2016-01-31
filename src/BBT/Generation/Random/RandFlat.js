@@ -27,14 +27,24 @@
    M Fischler      - put and get to/from streams 12/10/04
 */
 
-define([ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
 
   function RandFlat( args ){
     this.fa = args.a || 0;
     this.fb = args.b || 1;
     this.fwidth = args.width || ( args.b - args.a );
     this.fengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+      return ( this.fb - this.fa ) * fengine.Flat() + this.fa;
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
   } 
 
 
@@ -62,24 +72,6 @@ define([ '../Random/JamesRandom' ], function( JamesRandom ){
 
   };
 
-  RandFlat.prototype = {
-    constructor: RandFlat,
 
-    Fire: function(){
-      return ( this.fb - this.fa ) * fengine.Flat() + this.fa;
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );
-      }
-    },
-
-   
-
-
-  }
-
-  return RandFlat;
-});
+  module.exports = RandFlat;
 

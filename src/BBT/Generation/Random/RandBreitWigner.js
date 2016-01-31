@@ -21,15 +21,65 @@
                     operator() with arguments: 16th Feb 1998
    M Fischler      - put and get to/from streams 12/10/04
 */
-
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
+
 
   function RandBreitWigner( args ){
     this.fmean = args.mean || 1.0;
     this.fgamma = args.gamma || 0.2;
     this.fcut = args.cut || undefined;
     this.fengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+      if( this.fgamma == 0 ) return this.fmean;
+      var rval, displ;
+      rval  = 2.0 * this.fengine.Flat() - 1.0;
+
+      if( this.fcut === undefined ){
+        // Without cut
+        displ = 0.5 * this.fgamma * Math.tan( rval * Math.PI * 0.5 ); 
+      } else {
+        // With cut
+        var val;
+        val = Math.atan( 2.0 * this.fcut / this.fgamma );        
+        displ = 0.5 * gamma * Math.tan( rval * val ); 
+      }
+      return ( this.fmean + displ );
+    };
+
+    this.FireM2: function(){
+      var val, rval, displ;
+      if( this.fgamma == 0.0 ) return this.fmean;
+
+      if( this.fcut === undefined ){
+        // Without cut
+        val = Math.atan( -this.fmean / this.fgamma );
+        rval = RandBreitWigner.ShootFlat( {  a: val, b: Math.PI / 2, engine: this.fengine  } );
+        displ = this.fgamma * Math.tan( rval );
+        return Math.sqrt( Math.pow( this.fmean, 2 ) + this.fmean * displ );          
+      } else {
+        // With cut
+        var lower, upper, tmp;
+
+        tmp = Math.max( 0.0, this.fmean - this.fcut );
+        lower = Math.atan( ( tmp * tmp - Math.pow( this.fmean, 2) ) / ( this.fmean * this.fgamma ) );
+
+        upper = Math.atan( ( Math.pow( this.fmean + this.fcut, 2 ) - Math.pow( this.fmean, 2 ) ) / ( this.fmean * this.fgamma ) );
+
+        rval = RandBreitWigner.ShootFlat( { a: lower, b: upper, engine: this.fengine } );
+
+        displ = this.fgamma * Math.tan( rval );
+
+        return Math.sqrt( Math.max( 0.0, Math.pow( this.fmean, 2 ) + this.fmean * displ ) );
+      }
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
   } 
 
   RandBreitWigner.Shoot = function( args ){
@@ -112,59 +162,5 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
     }
   };
 
-  RandBreitWigner.prototype = {
-    constructor: RandBreitWigner,
 
-    Fire: function(){
-      if( this.fgamma == 0 ) return this.fmean;
-      var rval, displ;
-      rval  = 2.0 * this.fengine.Flat() - 1.0;
-
-      if( this.fcut === undefined ){
-        // Without cut
-        displ = 0.5 * this.fgamma * Math.tan( rval * Math.PI * 0.5 ); 
-      } else {
-        // With cut
-        var val;
-        val = Math.atan( 2.0 * this.fcut / this.fgamma );        
-        displ = 0.5 * gamma * Math.tan( rval * val ); 
-      }
-      return ( this.fmean + displ );
-    },
-
-    FireM2: function(){
-      var val, rval, displ;
-      if( this.fgamma == 0.0 ) return this.fmean;
-
-      if( this.fcut === undefined ){
-        // Without cut
-        val = Math.atan( -this.fmean / this.fgamma );
-        rval = RandBreitWigner.ShootFlat( {  a: val, b: Math.PI / 2, engine: this.fengine  } );
-        displ = this.fgamma * Math.tan( rval );
-        return Math.sqrt( Math.pow( this.fmean, 2 ) + this.fmean * displ );          
-      } else {
-        // With cut
-        var lower, upper, tmp;
-
-        tmp = Math.max( 0.0, this.fmean - this.fcut );
-        lower = Math.atan( ( tmp * tmp - Math.pow( this.fmean, 2) ) / ( this.fmean * this.fgamma ) );
-
-        upper = Math.atan( ( Math.pow( this.fmean + this.fcut, 2 ) - Math.pow( this.fmean, 2 ) ) / ( this.fmean * this.fgamma ) );
-
-        rval = RandBreitWigner.ShootFlat( { a: lower, b: upper, engine: this.fengine } );
-
-        displ = this.fgamma * Math.tan( rval );
-
-        return Math.sqrt( Math.max( 0.0, Math.pow( this.fmean, 2 ) + this.fmean * displ ) );
-      }
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );
-      }
-    }
-  } // end prototype
-
-  return RandBreitWigner;
-});
+  module.exports = RandBreitWigner;

@@ -39,8 +39,8 @@
   			4/14/05
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
 
   function RandGauss( args ){
     this.fmean = args.mean || 0.0;
@@ -48,6 +48,37 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
     this.fengine = args.engine || new JamesRandom({});
     this.fset = false;
     this.fnextGauss;
+
+    this.Fire: function(){
+      return this.Normal * this.fstdDev + this.fmean;
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
+
+    this.Normal: function(){
+      if( this.fset ){
+        this.fset = false;
+        return this.fnextGauss;
+      }
+
+      var r,v1,v2,fac,val; // double
+
+      do {
+        v1 = 2.0 * this.fengine.Flat() - 1.0;
+        v2 = 2.0 * this.fengine.Flat() - 1.0;
+        r = v1 * v1 + v2 * v2;
+      } while( r > 1.0 );
+
+      fac = Math.sqrt( -2.0 * Math.log( r ) / r );
+      val = v1 * fac;
+      this.fnextGauss = val;
+      this.fset = true;
+      return v2 * fac;
+    };
   } 
 
   RandGauss.snextGauss = 0.0;
@@ -119,42 +150,4 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
 
   };
 
-
-  RandGauss.prototype = {
-    constructor: RandGauss,
-
-    Fire: function(){
-      return this.Normal * this.fstdDev + this.fmean;
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );
-      }
-    },
-
-    Normal: function(){
-      if( this.fset ){
-        this.fset = false;
-        return this.fnextGauss;
-      }
-
-      var r,v1,v2,fac,val; // double
-
-      do {
-        v1 = 2.0 * this.fengine.Flat() - 1.0;
-        v2 = 2.0 * this.fengine.Flat() - 1.0;
-        r = v1 * v1 + v2 * v2;
-      } while( r > 1.0 );
-
-      fac = Math.sqrt( -2.0 * Math.log( r ) / r );
-      val = v1 * fac;
-      this.fnextGauss = val;
-      this.fset = true;
-      return v2 * fac;
-    }
-
-  }
-  return RandGauss;
-});
-
+  module.exports = RandGauss;

@@ -26,11 +26,23 @@
    M Fischler     - put and get to/from streams 12/10/04
 */
 
-define([ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
 
   function RandBit( args ){
     this.fengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+      var x = this.fengine.Flat();
+      var bit = ( x > 0.5 )? 1: 0;
+      return bit;
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
   } 
 
   RandBit.Shoot = function( args ){
@@ -52,23 +64,8 @@ define([ '../Random/JamesRandom' ], function( JamesRandom ){
     }
   };
 
-  RandBit.prototype = {
-    constructor: RandBit,
 
-    Fire: function(){
-      var x = this.fengine.Flat();
-      var bit = ( x > 0.5 )? 1: 0;
-      return bit;
-    },
 
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );
-      }
-    }
-  }
+  module.exports = RandBit;
 
-  return RandBit;
-
-});
 

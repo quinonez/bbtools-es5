@@ -32,38 +32,8 @@
                     mean instead of the proper value.  01/13/06
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
-
-  function RandPoisson( args ){
-    this.fmean = args.mean || 1.0;
-    this.fstatus = [ 0.0, 0.0, 0.0 ];
-    this.foldm = undefined;
-    this.fmeanMax;
-    this.fengine = args.engine || new JamesRandom({});
-  }
-
-  RandPoisson.sstatus = [ undefined, undefined, undefined ];
-
-  RandPoisson.soldMean = undefined;
-
-  RandPoisson.smeanMax = undefined;
-
-  RandPoisson.GetMaxMean = function(){
-    return RandPoisson.smeanMax;    
-  };
-
-  RandPoisson.GetOldMean = function(){
-    return RandPoisson.soldMean;    
-  };
-
-  RandPoisson.GetSStatus = function(){
-    return RandPoisson.sstatus;    
-  };
-
-  RandPoisson.SetOldMean = function( value ){
-    RandPoisson.soldMean = value;
-  };
+  var JamesRandom = require('jamesrandom');
 
   function gammln( xx ){
     // Returns the value ln(Gamma(xx) for xx > 0.  Full accuracy is obtained for 
@@ -100,6 +70,99 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
 
     fac = Math.sqrt( -2.0 * Math.log( r ) / r );
     return v2 * fac;
+  };
+
+
+
+
+  function RandPoisson( args ){
+    this.fmean = args.mean || 1.0;
+    this.fstatus = [ 0.0, 0.0, 0.0 ];
+    this.foldm = undefined;
+    this.fmeanMax;
+    this.fengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+      // Returns as a floating-point number an integer value that is a random
+      // deviation drawn from a Poisson distribution of mean xm, using flat()
+      // as a source of uniform random numbers.
+      // (Adapted from Numerical Recipes in C)
+
+      var em, t, y;
+      var sq, alxm, g1;
+
+      sq = this.fstatus[0];
+      alxm = this.fstatus[1];
+      g1 = this.fstatus[2];
+
+      if( this.fmean === -1 ) return 0;
+      if( this.fmean < 12.0 ){
+        if( this.fmean != this.foldm ){
+          this.foldm = this.fmean;
+          g1 = Math.exp( -this.fmean );
+        }
+        em = -1;
+        t = 1.0;
+        do {
+          em += 1.0;
+          t *= this.fengine.Flat();
+        } while( t > g1 );
+      } else if ( this.fmean < this.fmeanMax ) {
+        if ( this.fmean != this.foldm ) {
+          oldm = this.fmean;
+          sq = Math.sqrt( 2.0 * this.fmean );
+          alxm = Math.log( this.fmean );
+          g1 = this.fmean*alxm - gammln( this.fmean + 1.0 );
+        }
+        do {
+          do {
+      	    y = Math.tan( Math.PI * this.fengine.Flat() );
+            em = sq * y + this.fmean;
+          } while( em < 0.0 );
+          em = Math.floor( em );
+          t = 0.9 * ( 1.0 + y * y ) * Math.exp( em * alxm - gammln( em + 1.0 ) - g1 );
+        } while( this.fengine.Flat() > t );
+      } else {
+        em = this.fmean + Math.sqrt( this.fmean ) * normal( sengine );
+        if ( ( em | 0 ) < 0 ) 
+          em = ( this.fmean | 0 ) >= 0? this.fmean: GetMaxMean();
+      }    
+      this.fstatus[0] = sq; 
+      this.fstatus[1] = alxm; 
+      this.fstatus[2] = g1;
+
+      return ( em | 0 );    
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire( this.fmean ) );
+      }
+    };
+  }
+
+
+
+  RandPoisson.sstatus = [ undefined, undefined, undefined ];
+
+  RandPoisson.soldMean = undefined;
+
+  RandPoisson.smeanMax = undefined;
+
+  RandPoisson.GetMaxMean = function(){
+    return RandPoisson.smeanMax;    
+  };
+
+  RandPoisson.GetOldMean = function(){
+    return RandPoisson.soldMean;    
+  };
+
+  RandPoisson.GetSStatus = function(){
+    return RandPoisson.sstatus;    
+  };
+
+  RandPoisson.SetOldMean = function( value ){
+    RandPoisson.soldMean = value;
   };
 
 
@@ -172,70 +235,6 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
     }
   };
 
-  RandPoisson.prototype = {
-    constructor: RandPoisson,
 
-    Fire: function(){
-      // Returns as a floating-point number an integer value that is a random
-      // deviation drawn from a Poisson distribution of mean xm, using flat()
-      // as a source of uniform random numbers.
-      // (Adapted from Numerical Recipes in C)
-
-      var em, t, y;
-      var sq, alxm, g1;
-
-      sq = this.fstatus[0];
-      alxm = this.fstatus[1];
-      g1 = this.fstatus[2];
-
-      if( this.fmean === -1 ) return 0;
-      if( this.fmean < 12.0 ){
-        if( this.fmean != this.foldm ){
-          this.foldm = this.fmean;
-          g1 = Math.exp( -this.fmean );
-        }
-        em = -1;
-        t = 1.0;
-        do {
-          em += 1.0;
-          t *= this.fengine.Flat();
-        } while( t > g1 );
-      } else if ( this.fmean < this.fmeanMax ) {
-        if ( this.fmean != this.foldm ) {
-          oldm = this.fmean;
-          sq = Math.sqrt( 2.0 * this.fmean );
-          alxm = Math.log( this.fmean );
-          g1 = this.fmean*alxm - gammln( this.fmean + 1.0 );
-        }
-        do {
-          do {
-      	    y = Math.tan( Math.PI * this.fengine.Flat() );
-            em = sq * y + this.fmean;
-          } while( em < 0.0 );
-          em = Math.floor( em );
-          t = 0.9 * ( 1.0 + y * y ) * Math.exp( em * alxm - gammln( em + 1.0 ) - g1 );
-        } while( this.fengine.Flat() > t );
-      } else {
-        em = this.fmean + Math.sqrt( this.fmean ) * normal( sengine );
-        if ( ( em | 0 ) < 0 ) 
-          em = ( this.fmean | 0 ) >= 0? this.fmean: GetMaxMean();
-      }    
-      this.fstatus[0] = sq; 
-      this.fstatus[1] = alxm; 
-      this.fstatus[2] = g1;
-
-      return ( em | 0 );    
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire( this.fmean ) );
-      }
-    }
-
-  }
-
-  return RandPoisson;
-
-});
+  module.exports = RandPoisson;
 

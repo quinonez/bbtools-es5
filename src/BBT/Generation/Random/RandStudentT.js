@@ -25,13 +25,36 @@
   			4/14/05
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
+
+
 
   function RandStudentT( args ){
     this.fa = args.a || 1.0;
     this.fengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+
+      var u,v,w;
+
+      do {
+        u = 2.0 * this.fengine.Flat() - 1.0;
+        v = 2.0 * this.fengine.Flat() - 1.0;
+      } while( ( w = u * u + v * v) > 1.0 );
+
+      return ( u * Math.sqrt( this.fa * ( Math.exp( -2.0 / this.fa * Math.log( w ) ) - 1.0 ) / w ) );
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; i++ ){
+        vect.push( this.Fire() );  
+      }
+    };
+
   } 
+
+
 
   RandStudentT.Shoot = function( args ){
     /******************************************************************
@@ -75,6 +98,7 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
 
   };
 
+
   RandStudentT.ShootArray = function( args ){
     var ssize = args.size || 1;
     var sa = args.a || 1.0;
@@ -88,30 +112,5 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
     }
   };
 
-  RandStudentT.prototype = {
-    constructor: RandStudentT,
 
-    Fire: function(){
-
-      var u,v,w;
-
-      do {
-        u = 2.0 * this.fengine.Flat() - 1.0;
-        v = 2.0 * this.fengine.Flat() - 1.0;
-      } while( ( w = u * u + v * v) > 1.0 );
-
-      return ( u * Math.sqrt( this.fa * ( Math.exp( -2.0 / this.fa * Math.log( w ) ) - 1.0 ) / w ) );
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; i++ ){
-        vect.push( this.Fire() );  
-      }
-    }
-
-  }
-
-  return RandStudentT;
-
-});
-
+  module.exports = RandStudentT;

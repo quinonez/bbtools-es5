@@ -25,35 +25,77 @@
    M Fischler      - put and get to/from streams 12/10/04
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
+
+  function StirlingCorrection( k ){
+    /*
+    +----------------------------------------------------------------------+
+    | StirlingCorrection                                                   |
+    +----------------------------------------------------------------------+
+
+    Correction term of the Stirling approximation for std::log(k!)          
+    (series in 1/k, or table values for small k)                         
+    with long int parameter k                                            
+                                                                         
+                                                                         
+    log k! = (k + 1/2)log(k + 1) - (k + 1) + (1/2)log(2Pi) +              
+             StirlingCorrection(k + 1)                                    
+                                                                         
+    log k! = (k + 1/2)log(k)     -  k      + (1/2)log(2Pi) +              
+             StirlingCorrection(k)                                        
+                                                                         
+    */
+    var C1 = 8.33333333333333333e-02;     //  +1/12 
+    var C3 = -2.77777777777777778e-03;     //  -1/360
+    var C5 = 7.93650793650793651e-04;     //  +1/1260
+    var C7 = -5.95238095238095238e-04;     //  -1/1680
+ 
+    var  c = new Array(31);
+    c = [   0.0,
+ 			     8.106146679532726e-02, 4.134069595540929e-02,
+ 			     2.767792568499834e-02, 2.079067210376509e-02,
+ 			     1.664469118982119e-02, 1.387612882307075e-02,
+ 			     1.189670994589177e-02, 1.041126526197209e-02,
+ 			     9.255462182712733e-03, 8.330563433362871e-03,
+ 			     7.573675487951841e-03, 6.942840107209530e-03,
+ 			     6.408994188004207e-03, 5.951370112758848e-03,
+ 			     5.554733551962801e-03, 5.207655919609640e-03,
+ 			     4.901395948434738e-03, 4.629153749334029e-03,
+ 			     4.385560249232324e-03, 4.166319691996922e-03,
+ 			     3.967954218640860e-03, 3.787618068444430e-03,
+ 			     3.622960224683090e-03, 3.472021382978770e-03,
+ 			     3.333155636728090e-03, 3.204970228055040e-03,
+ 			     3.086278682608780e-03, 2.976063983550410e-03,
+ 			     2.873449362352470e-03, 2.777674929752690e-03,
+    ];
+    var r, rr;
+ 
+    if( k > 30 ){
+      r = 1.0 / k;
+      rr = r * r;
+      return( r * ( C1 + rr * ( C3 + rr * ( C5 + rr * C7 ) ) ) );
+    } else return( c[ k ] );
+  };
+
+
 
   function RandBinomial( args ){
     this.fn = args.n || 1;
     this.fp = args.p || 0.5;
     this.fengine = args.engine || new JamesRandom({});
-  } 
 
-  RandBinomial.Shoot = function( args ){
-    var sn = args.n || 1;
-    var sp = args.p || 0.5;
-    var sengine = args.engine || new JamesRandom({});
-    return RandBinomial.GenBinomial( sengine, sn, sp );    
-  };
+    this.Fire: function( ){
+      return RandBinomial.GenBinomial( this.fengine, this.fn, this.fp );    
+    };
 
-  RandBinomial.ShootArray = function( args ){
-    var ssize = args.size || 1;
-    var sn = args.n || 1;
-    var sp = args.p || 0.5;
-    var sengine = args.engine || new JamesRandom({});
-    // var svect = args.vect;
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; i++ ){
+        vect.push( this.Fire() );  
+      }
+    };
+  }
 
-    var argsShoot = { n: sn, p: sp, engine: sengine };
-
-    for( var i = 0; i < ssize; ++i ){
-      args.vect.push( RandBinomial.Shoot( argsShoot ) );
-    }
-  };
 
   RandBinomial.GenBinomial = function( sengine, n, p ){
     /*
@@ -249,74 +291,27 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   };
 
 
-  function StirlingCorrection( k ){
-    /*
-    +----------------------------------------------------------------------+
-    | StirlingCorrection                                                   |
-    +----------------------------------------------------------------------+
+  RandBinomial.Shoot = function( args ){
+    var sn = args.n || 1;
+    var sp = args.p || 0.5;
+    var sengine = args.engine || new JamesRandom({});
+    return RandBinomial.GenBinomial( sengine, sn, sp );    
+  };
 
-    Correction term of the Stirling approximation for std::log(k!)          
-    (series in 1/k, or table values for small k)                         
-    with long int parameter k                                            
-                                                                         
-                                                                         
-    log k! = (k + 1/2)log(k + 1) - (k + 1) + (1/2)log(2Pi) +              
-             StirlingCorrection(k + 1)                                    
-                                                                         
-    log k! = (k + 1/2)log(k)     -  k      + (1/2)log(2Pi) +              
-             StirlingCorrection(k)                                        
-                                                                         
-    */
-    var C1 = 8.33333333333333333e-02;     //  +1/12 
-    var C3 = -2.77777777777777778e-03;     //  -1/360
-    var C5 = 7.93650793650793651e-04;     //  +1/1260
-    var C7 = -5.95238095238095238e-04;     //  -1/1680
- 
-    var  c = new Array(31);
-    c = [   0.0,
- 			     8.106146679532726e-02, 4.134069595540929e-02,
- 			     2.767792568499834e-02, 2.079067210376509e-02,
- 			     1.664469118982119e-02, 1.387612882307075e-02,
- 			     1.189670994589177e-02, 1.041126526197209e-02,
- 			     9.255462182712733e-03, 8.330563433362871e-03,
- 			     7.573675487951841e-03, 6.942840107209530e-03,
- 			     6.408994188004207e-03, 5.951370112758848e-03,
- 			     5.554733551962801e-03, 5.207655919609640e-03,
- 			     4.901395948434738e-03, 4.629153749334029e-03,
- 			     4.385560249232324e-03, 4.166319691996922e-03,
- 			     3.967954218640860e-03, 3.787618068444430e-03,
- 			     3.622960224683090e-03, 3.472021382978770e-03,
- 			     3.333155636728090e-03, 3.204970228055040e-03,
- 			     3.086278682608780e-03, 2.976063983550410e-03,
- 			     2.873449362352470e-03, 2.777674929752690e-03,
-    ];
-    var r, rr;
- 
-    if( k > 30 ){
-      r = 1.0 / k;
-      rr = r * r;
-      return( r * ( C1 + rr * ( C3 + rr * ( C5 + rr * C7 ) ) ) );
-    } else return( c[ k ] );
+  RandBinomial.ShootArray = function( args ){
+    var ssize = args.size || 1;
+    var sn = args.n || 1;
+    var sp = args.p || 0.5;
+    var sengine = args.engine || new JamesRandom({});
+    // var svect = args.vect;
+
+    var argsShoot = { n: sn, p: sp, engine: sengine };
+
+    for( var i = 0; i < ssize; ++i ){
+      args.vect.push( RandBinomial.Shoot( argsShoot ) );
+    }
   };
 
 
-  RandBinomial.prototype = {
-    constructor: RandBinomial,
-
-    Fire: function( ){
-      return RandBinomial.GenBinomial( this.fengine, this.fn, this.fp );    
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; i++ ){
-        vect.push( this.Fire() );  
-      }
-    },
-
-  }
-
-  return RandBinomial;
-
-});
-
+  module.exports = RandBinomial;;
 

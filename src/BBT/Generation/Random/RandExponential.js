@@ -24,21 +24,37 @@
   			4/14/05
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
+  var JamesRandom = require('jamesrandom');
 
   function RandExponential( args ){
     this.fmean = args.mean || 1.0;
     this.fengine = args.engine || new JamesRandom({});
     //this.fnextGauss;
     //this.set;
+
+    this.Fire: function( ){
+      return -Math.log( this.fengine.Flat() ) * this.fmean;
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
   } 
+
+
+
 
   RandExponential.Shoot = function( args ){
     var smean = args.mean || 1.0;
     var sengine = args.engine || new JamesRandom({});
     return -Math.log( sengine.Flat() ) * smean; 
   };
+
+
+
 
   RandExponential.ShootArray = function( args ){
     var ssize = args.size || 1;
@@ -55,22 +71,6 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   };
 
 
-  RandExponential.prototype = {
-    constructor: RandExponential,
 
-    Fire: function( ){
-      return -Math.log( this.fengine.Flat() ) * this.fmean;
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );
-      }
-    }
-
-
-  }
-
-  return RandExponential;
-});
+  module.exports = RandExponential;
 

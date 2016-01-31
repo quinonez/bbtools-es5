@@ -34,12 +34,8 @@
    M Fischler      - put and get to/from streams 12/13/04
 */
 
-define( [ '../Random/JamesRandom' ], function( JamesRandom ){
   "use strict";
-
-  function RandLandau( args ){
-    var sengine = args.engine || new JamesRandom({});
-  } 
+  var JamesRandom = require('jamesrandom');
 
   var TABLE_INTERVAL = 0.001;
   var TABLE_END = 982;
@@ -254,6 +250,23 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
     56.123356, 59.103894, 					// .982
   ];
     
+
+
+  function RandLandau( args ){
+    var sengine = args.engine || new JamesRandom({});
+
+    this.Fire: function(){
+      return RandLandau.Transform( this.fengine.Flat() );
+    };
+
+    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
+
+  } 
+
     
   RandLandau.Shoot = function( args ){
     var sengine = args.engine || new JamesRandom({});
@@ -349,19 +362,5 @@ define( [ '../Random/JamesRandom' ], function( JamesRandom ){
     }        
   };
 
-  RandLandau.prototype = {
-    constructor: RandLandau,
-
-    Fire: function(){
-      return RandLandau.Transform( this.fengine.Flat() );
-    },
-
-    FireArray: function( /* size of vect */ size, /* Array */ vect ){
-      for( var i = 0; i < size; ++i ){
-        vect.push( this.Fire() );
-      }
-    }
-  }
-  return RandLandau;
-});
+  module.exports = RandLandau;
 
