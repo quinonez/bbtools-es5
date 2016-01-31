@@ -1,4 +1,7 @@
 // Project configuration.
+'use strict';
+
+
 grunt.initConfig({
   pkg: grunt.file.readJSON('package.json'),
   uglify: {

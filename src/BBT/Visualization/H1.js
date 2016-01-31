@@ -49,16 +49,12 @@ define( [ 'd3',
     this.fXaxis =new Axis("xaxishisto", "Eje x en [u]") ;
     this.fYaxis =new Axis("xaxishisto", "Eje x en [u]") ;
 	//this.fPainter = Object.create( Painter() );
-  }
 
-  H1.prototype = {
-    constructor: H1,
-
-    Fill: function( value ) {
+    this.Fill: function( value ) {
       return this.rawData.push( value );
-    },
+    };
 
-    FillRandom: function( args ){
+    this.FillRandom: function( args ){
       var siz3 = args.size || 1;
       var n = args.n || siz3;
       siz3 = n;
@@ -158,10 +154,10 @@ define( [ 'd3',
           this.rawData = v3ct;
           break;
       }
-    },
+    };
  
     // Deattach data preparation
-    Prepare: function(){
+    this.Prepare: function(){
       var binxlow = this.xmin;
       var binwidth = ( this.xmax - this.xmin ) / this.nbinsx;
       var binxup = binxlow + binwidth;
@@ -190,9 +186,9 @@ define( [ 'd3',
       }
       console.log(this.freqData);
        
-    },
+    };
     
-    Draw: function(){
+    this.Draw: function(){
       this.Prepare();
       var binwidth = ( this.xmax - this.xmin ) / this.nbinsx;
       // **************************************************************
@@ -242,18 +238,15 @@ define( [ 'd3',
           .attr( "height", function(){return height-yScale(d);}  )
 		        .attr("fill", "steelblue");
       });
-    }, // Ends function Draw
+    }; // Ends function Draw
 
-    GetXaxis: function(){
+    this.GetXaxis: function(){
       return this.fXaxis;
-    },
+    };
 
-    GetYaxis: function(){
+    this.GetYaxis: function(){
       return this.fYaxis;
-    },
-    
-};
-  return H1;
- 
-}); // Ends Module H1
+    };
+  }
 
+  module.exports = H1;
