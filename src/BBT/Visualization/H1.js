@@ -1,41 +1,52 @@
-/*
-Graphical Module H1.
-This module has all functionalities for graphical display of user data.
+/* 
+   +----------------------------------------------------------------------+
+   |                          BBT Visualization                           |
+   |                             --- H1 ---                               |
+   |                            Module File                               |
+   +----------------------------------------------------------------------+
+  
+   Graphical Module H1.
+   This module has all functionalities for graphical display of user data 
+   by using 1D Histograms.
+  
+   +----------------------------------------------------------------------+
+   | JavaScript                                                           |
+   +----------------------------------------------------------------------+
+   F. Quinonez - Created 2015-10-30 
+               - Developed functions: H1, Fill, GetXaxis, GetYaxis, 
+                 FillRandom
 
-*/
-define( [ 'd3', 
-          '../Visualization/Axis',
-          '../Generation/Random/JamesRandom',
-          '../Generation/Random/RandBinomial', 
-          '../Generation/Random/RandBit', 
-          '../Generation/Random/RandBreitWigner', 
-          '../Generation/Random/RandChiSquare', 
-          '../Generation/Random/RandExponential', 
-          '../Generation/Random/RandFlat',
-          '../Generation/Random/RandGamma', 
-          '../Generation/Random/RandGauss', 
-          '../Generation/Random/RandLandau', 
-          '../Generation/Random/RandPoisson', 
-          '../Generation/Random/RandStudentT' 
-        ], function( 
-             d3, 
-             Axis,
-             JamesRandom,
-             RandBinomial,
-             RandBit,
-             RandBreitWigner,
-             RandChiSquare,
-             RandExponential,
-             RandFlat,
-             RandGamma,
-             RandGauss,
-             RandLandau,
-             RandPoisson,
-             RandStudentT
-           ){
-  "use strict";
+   A. J. Hernandez Goez - Developed functions: Draw.
+   +----------------------------------------------------------------------+
+   | C++                                                                  |
+   +----------------------------------------------------------------------+
+   Inspired by Class TH1 https://root.cern.ch/doc/master/classTH1.html 
+   of ROOT https://root.cern.ch/ 
 
-  // Object Constructor H1 Building Block Histogram 1D. 
+   */
+
+  'use strict';
+
+  var JamesRandom     = require('jamesrandom');
+
+  var d3              = require('../../bower_components/d3/d3.js');
+
+  var Axis            = require('../Visualization/Axis.js');
+
+  var RandBinomial    = require('../Generation/Random/RandBinomial.js'); 
+  var RandBit         = require('../Generation/Random/RandBit.js'); 
+  var RandBreitWigner = require('../Generation/Random/RandBreitWigner.js'); 
+  var RandChiSquare   = require('../Generation/Random/RandChiSquare.js'); 
+  var RandExponential = require('../Generation/Random/RandExponential.js'); 
+  var RandFlat        = require('../Generation/Random/RandFlat.js');
+  var RandGamma       = require('../Generation/Random/RandGamma.js'); 
+  var RandGauss       = require('../Generation/Random/RandGauss.js'); 
+  var RandLandau      = require('../Generation/Random/RandLandau.js'); 
+  var RandPoisson     = require('../Generation/Random/RandPoisson.js'); 
+  var RandStudentT    = require('../Generation/Random/RandStudentT.js');
+ 
+
+  // BBT Histogram 1D Constructor. 
   function H1( name, title, nbinsx, xmin, xmax ){
     this.fDimension = 1; // Dimension of the plot data.
     this.name = name;
@@ -238,6 +249,7 @@ define( [ 'd3',
           .attr( "height", function(){return height-yScale(d);}  )
 		        .attr("fill", "steelblue");
       });
+
     }; // Ends function Draw
 
     this.GetXaxis: function(){
@@ -247,6 +259,7 @@ define( [ 'd3',
     this.GetYaxis: function(){
       return this.fYaxis;
     };
+
   }
 
   module.exports = H1;

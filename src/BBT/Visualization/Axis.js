@@ -1,13 +1,29 @@
-/*
-Module Axis Building Block and Tools Axis.
+/* 
+   +----------------------------------------------------------------------+
+   |                          BBT Visualization                           |
+   |                            --- Axis ---                              |
+   |                            Module File                               |
+   +----------------------------------------------------------------------+
+  
+   Graphical Module Axis.
+   This module has all functionalities for graphical display of axes for 
+   user data Histograms.
+  
+   +----------------------------------------------------------------------+
+   | JavaScript                                                           |
+   +----------------------------------------------------------------------+
+   F. Quinonez - Created 2015-10-30 
+   +----------------------------------------------------------------------+
+   | C++                                                                  |
+   +----------------------------------------------------------------------+
+   Inspired by Class TAxis https://root.cern.ch/doc/master/classTAxis.html 
+   of ROOT https://root.cern.ch/ 
 
-This module has all functionalities for graphical display of axes.
+   */
 
-Module Dependencies: d3, THREE, BBMathematics, BBStatistics.
- 
-*/
-define( [ 'd3' ], function( d3 ){
   "use strict";
+  var d3 = require('../../bower_components/d3/d3.js')
+
 
   // Object Constructor BBH1 Building Block Histogram 1D. 
  
@@ -25,10 +41,7 @@ define( [ 'd3' ], function( d3 ){
     this.fTitleOffset;
     this.d3Axis = d3.svg.axis();
 
-  }
 
-  Axis.prototype = {
-    constructor: Axis,
     // ****************************************************
     // * Functions coming from ROOT mother class TAxisAtt *
     // ****************************************************
@@ -174,9 +187,6 @@ define( [ 'd3' ], function( d3 ){
       return this.fTitleFont;
     },
 */
-  };
+  }
 
-  return Axis;
- 
-}); // Ends Module Axis
-
+  module.exports = Axis;
