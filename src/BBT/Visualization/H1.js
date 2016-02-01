@@ -31,7 +31,7 @@
 
   var d3              = require('../../bower_components/d3/d3.js');
 
-  var Axis            = require('../Visualization/Axis.js');
+  var Axis            = require('./Visualization/Axis.js');
 
   var RandBinomial    = require('../Generation/Random/RandBinomial.js'); 
   var RandBit         = require('../Generation/Random/RandBit.js'); 
