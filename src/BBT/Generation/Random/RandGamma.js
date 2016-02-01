@@ -28,19 +28,19 @@
   var JamesRandom = require('jamesrandom');
 
   function RandGamma( args ){
-   this.fk = args.k || 1.0;
-   this.flambda = args.lambda || 1.0;
-   this.fengine = args.engine || new JamesRandom({});
+    this.fk = args.k || 1.0;
+    this.flambda = args.lambda || 1.0;
+    this.fengine = args.engine || new JamesRandom({});
 
-   this.Fire: function(){
-     return RandGamma.GenGamma( this.fengine, this.fk, this.flambda );
-   };
+    this.Fire = function(){
+      return RandGamma.GenGamma( this.fengine, this.fk, this.flambda );
+    };
 
-   this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
-     for( var i = 0; i < size; ++i ){
-       vect.push( this.Fire() );
-     }
-   };
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
+      for( var i = 0; i < size; ++i ){
+        vect.push( this.Fire() );
+      }
+    };
   } 
 
   RandGamma.GenGamma = function( sengine, sk, slambda ){

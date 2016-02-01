@@ -85,11 +85,11 @@
     this.fp = args.p || 0.5;
     this.fengine = args.engine || new JamesRandom({});
 
-    this.Fire: function( ){
+    this.Fire = function( ){
       return RandBinomial.GenBinomial( this.fengine, this.fn, this.fp );    
     };
 
-    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
       for( var i = 0; i < size; i++ ){
         vect.push( this.Fire() );  
       }

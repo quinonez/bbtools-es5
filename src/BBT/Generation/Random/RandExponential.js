@@ -32,11 +32,11 @@
     //this.fnextGauss;
     //this.set;
 
-    this.Fire: function( ){
+    this.Fire = function( ){
       return -Math.log( this.fengine.Flat() ) * this.fmean;
     };
 
-    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
       for( var i = 0; i < size; ++i ){
         vect.push( this.Fire() );
       }

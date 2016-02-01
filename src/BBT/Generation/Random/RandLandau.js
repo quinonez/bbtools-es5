@@ -254,11 +254,11 @@
   function RandLandau( args ){
     var sengine = args.engine || new JamesRandom({});
 
-    this.Fire: function(){
+    this.Fire = function(){
       return RandLandau.Transform( this.fengine.Flat() );
     };
 
-    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
       for( var i = 0; i < size; ++i ){
         vect.push( this.Fire() );
       }

@@ -30,11 +30,11 @@
     this.fa = args.a || 1.0;
     this.fengine = args.engine || new JamesRandom({});
 
-    this.Fire: function(){
+    this.Fire = function(){
       return RandChiSquare.GenChiSquare( this.fengine, this.fa );
     };
 
-    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
       for( var i = 0; i < size; ++i ){
         vect.push( this.Fire() );  
       }

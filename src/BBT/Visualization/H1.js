@@ -57,15 +57,15 @@
     this.rawData = []; // data array filled by Fill function.
     this.freqData = new Array( this.nbinsx + 2 ); // data array of frequencies for each bin. Two bins extra have been added, one for underflow and the another one for overflow.
 
-    this.fXaxis =new Axis("xaxishisto", "Eje x en [u]") ;
-    this.fYaxis =new Axis("xaxishisto", "Eje x en [u]") ;
+    this.fXaxis = new Axis("xaxishisto", "Eje x en [u]");
+    this.fYaxis = new Axis("xaxishisto", "Eje x en [u]");
 	//this.fPainter = Object.create( Painter() );
 
-    this.Fill: function( value ) {
+    this.Fill = function( value ) {
       return this.rawData.push( value );
     };
 
-    this.FillRandom: function( args ){
+    this.FillRandom = function( args ){
       var siz3 = args.size || 1;
       var n = args.n || siz3;
       siz3 = n;
@@ -168,7 +168,7 @@
     };
  
     // Deattach data preparation
-    this.Prepare: function(){
+    this.Prepare = function(){
       var binxlow = this.xmin;
       var binwidth = ( this.xmax - this.xmin ) / this.nbinsx;
       var binxup = binxlow + binwidth;
@@ -199,7 +199,7 @@
        
     };
     
-    this.Draw: function(){
+    this.Draw = function(){
       this.Prepare();
       var binwidth = ( this.xmax - this.xmin ) / this.nbinsx;
       // **************************************************************
@@ -252,11 +252,11 @@
 
     }; // Ends function Draw
 
-    this.GetXaxis: function(){
+    this.GetXaxis = function(){
       return this.fXaxis;
     };
 
-    this.GetYaxis: function(){
+    this.GetYaxis = function(){
       return this.fYaxis;
     };
 

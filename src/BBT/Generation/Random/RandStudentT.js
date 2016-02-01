@@ -34,7 +34,7 @@
     this.fa = args.a || 1.0;
     this.fengine = args.engine || new JamesRandom({});
 
-    this.Fire: function(){
+    this.Fire = function(){
 
       var u,v,w;
 
@@ -46,7 +46,7 @@
       return ( u * Math.sqrt( this.fa * ( Math.exp( -2.0 / this.fa * Math.log( w ) ) - 1.0 ) / w ) );
     };
 
-    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
       for( var i = 0; i < size; i++ ){
         vect.push( this.Fire() );  
       }

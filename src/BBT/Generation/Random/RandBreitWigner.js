@@ -31,7 +31,7 @@
     this.fcut = args.cut || undefined;
     this.fengine = args.engine || new JamesRandom({});
 
-    this.Fire: function(){
+    this.Fire = function(){
       if( this.fgamma == 0 ) return this.fmean;
       var rval, displ;
       rval  = 2.0 * this.fengine.Flat() - 1.0;
@@ -48,7 +48,7 @@
       return ( this.fmean + displ );
     };
 
-    this.FireM2: function(){
+    this.FireM2 = function(){
       var val, rval, displ;
       if( this.fgamma == 0.0 ) return this.fmean;
 
@@ -75,7 +75,7 @@
       }
     };
 
-    this.FireArray: function( /* size of vect */ size, /* Array */ vect ){
+    this.FireArray = function( /* size of vect */ size, /* Array */ vect ){
       for( var i = 0; i < size; ++i ){
         vect.push( this.Fire() );
       }
