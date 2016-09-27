@@ -1,11 +1,9 @@
 {
-  "name": "bbtools-es5",
+  "name": "bbtools",
   "description": "The Building Blocks and Tools Library - EcmaScript 5",
-  "main": "src/BBT.js",
   "authors": [
     "Fernando Quinonez <fernando.andres.quinonez.granados@gmail.com>"
   ],
-  "license": "MIT",
   "keywords": [
     "bigdata",
     "data",
@@ -22,16 +20,33 @@
     "analysis"
   ],
   "homepage": "https://github.com/quinonez/bbtools-es5",
-  "moduleType": [],
-  "ignore": [
-    "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ],
+  "version": "0.0.0",
   "dependencies": {
-    "three.js": "threejs#*",
-    "d3": "^3.5.14"
+    "angular": "^1.4.0",
+    "bootstrap": "^3.2.0",
+    "angular-animate": "^1.4.0",
+    "angular-aria": "^1.4.0",
+    "angular-cookies": "^1.4.0",
+    "angular-messages": "^1.4.0",
+    "angular-resource": "^1.4.0",
+    "angular-route": "^1.4.0",
+    "angular-sanitize": "^1.4.0",
+    "angular-touch": "^1.4.0"
+    "three.js": "threejs#",
+    "d3": "d3#"
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.4.0"
+  },
+  "appPath": "app",
+  "moduleName": "BBTApp",
+  "overrides": {
+    "bootstrap": {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    }
   }
 }

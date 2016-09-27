@@ -1,0 +1,50 @@
+{
+  "name": "bbtools-es5",
+  "version": "1.0.0",
+  "description": "The Building Blocks and Tools Library - EcmaScript 5",
+  "main": "src/BBT.js",
+  "scripts": {
+    "postinstall": "bower install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quinonez/bbtools-es5.git"
+  },
+  "keywords": [
+    "bigdata",
+    "data",
+    "sciences",
+    "hep",
+    "physics",
+    "mathematics",
+    "statistics",
+    "biology",
+    "chemistry",
+    "visualization",
+    "visualisation",
+    "generation",
+    "analysis"
+  ],
+  "author": "Fernando Quinonez <fernando.andres.quinonez.granados@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/quinonez/bbtools-es5/issues"
+  },
+  "homepage": "https://github.com/quinonez/bbtools-es5#readme",
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "browserify": "^13.0.0",
+    "grunt": "^1.2.0",
+    "grunt-contrib-clean": "^0.7.0",
+    "grunt-contrib-concat": "^0.5.1",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-contrib-uglify": "^0.11.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "load-grunt-tasks": "^3.4.0",
+    "time-grunt": "^1.3.0"
+  },
+  "dependencies": {
+    "hephys": "^1.0.8",
+    "jamesrandom": "^1.0.5"
+  }
+}
